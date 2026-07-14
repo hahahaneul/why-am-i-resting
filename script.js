@@ -4,6 +4,7 @@
    - 질문 진행
    - 결과 계산
    - Firebase 참여자수
+   - 이미지 사전 로딩
    - 공유 기능
 ========================= */
 
@@ -41,6 +42,9 @@ let userName = "";
 let currentQuestionIndex = 0;
 let selectedAnswers = [];
 let currentResultType = null;
+let isAnswerLocked = false;
+
+const imageCache = {};
 
 /* =========================
    DOM 가져오기
@@ -105,6 +109,7 @@ init();
 function init() {
   connectParticipantCount();
   bindEvents();
+  preloadAllImages();
   showScreen("start");
 }
 
@@ -128,6 +133,7 @@ function bindEvents() {
 
   similarTypeCard.addEventListener("click", function () {
     const type = similarTypeCard.dataset.type;
+
     if (type) {
       renderResult(type);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -136,6 +142,7 @@ function bindEvents() {
 
   differentTypeCard.addEventListener("click", function () {
     const type = differentTypeCard.dataset.type;
+
     if (type) {
       renderResult(type);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -159,6 +166,88 @@ function bindEvents() {
       shareMenu.classList.remove("open");
     }
   });
+}
+
+/* =========================
+   이미지 사전 로딩
+========================= */
+
+function preloadAllImages() {
+  const imagePaths = [
+    "images/start-main.png",
+    "images/og-image.png",
+    ...QUESTIONS.map(function (question) {
+      return question.image;
+    }),
+    ...TYPE_ORDER.map(function (type) {
+      return TYPE_INFO[type].image;
+    })
+  ];
+
+  const uniqueImagePaths = [...new Set(imagePaths)];
+
+  uniqueImagePaths.forEach(function (src) {
+    preloadImage(src);
+  });
+}
+
+function preloadImage(src) {
+  if (!src) {
+    return Promise.resolve();
+  }
+
+  if (imageCache[src]) {
+    return imageCache[src].promise;
+  }
+
+  const img = new Image();
+
+  const promise = new Promise(function (resolve) {
+    img.onload = function () {
+      resolve(src);
+    };
+
+    img.onerror = function () {
+      console.warn("이미지 로딩 실패:", src);
+      resolve(src);
+    };
+  });
+
+  img.src = src;
+
+  imageCache[src] = {
+    img: img,
+    promise: promise
+  };
+
+  return promise;
+}
+
+function isImageLoaded(src) {
+  return Boolean(
+    imageCache[src] &&
+      imageCache[src].img &&
+      imageCache[src].img.complete &&
+      imageCache[src].img.naturalWidth > 0
+  );
+}
+
+function prepareImageWithLimit(src, maxWaitMs) {
+  const imagePromise = preloadImage(src);
+
+  const limitPromise = new Promise(function (resolve) {
+    setTimeout(resolve, maxWaitMs);
+  });
+
+  return Promise.race([imagePromise, limitPromise]);
+}
+
+function preloadNextQuestionImage() {
+  const nextIndex = currentQuestionIndex + 1;
+
+  if (QUESTIONS[nextIndex]) {
+    preloadImage(QUESTIONS[nextIndex].image);
+  }
 }
 
 /* =========================
@@ -260,11 +349,16 @@ function handleStart() {
   userName = typedName;
   currentQuestionIndex = 0;
   selectedAnswers = [];
+  currentResultType = null;
+  isAnswerLocked = false;
 
   increaseParticipantCount();
 
-  showScreen("question");
-  renderQuestion();
+  prepareImageWithLimit(QUESTIONS[0].image, 500).then(function () {
+    showScreen("question");
+    renderQuestion();
+    preloadNextQuestionImage();
+  });
 }
 
 /* =========================
@@ -277,6 +371,8 @@ function renderQuestion() {
   const currentNumber = currentQuestionIndex + 1;
   const percent = Math.round((currentNumber / total) * 100);
 
+  isAnswerLocked = false;
+
   progressText.textContent = `${currentNumber} / ${total}`;
   progressPercent.textContent = `${percent}%`;
   progressFill.style.width = `${percent}%`;
@@ -284,9 +380,38 @@ function renderQuestion() {
   questionNumber.textContent = `Q${question.number}`;
   questionTitle.textContent = question.question;
 
-  questionImage.src = question.image;
+  renderQuestionImage(question);
+  renderAnswerButtons(question);
+  preloadNextQuestionImage();
+}
+
+function renderQuestionImage(question) {
+  const nextSrc = question.image;
+
   questionImage.alt = `질문 ${question.number}번 이미지`;
 
+  if (questionImage.src.includes(nextSrc) && isImageLoaded(nextSrc)) {
+    questionImage.style.opacity = "1";
+    return;
+  }
+
+  if (isImageLoaded(nextSrc)) {
+    questionImage.style.opacity = "1";
+    questionImage.src = nextSrc;
+    return;
+  }
+
+  questionImage.style.opacity = "0.25";
+  questionImage.src = nextSrc;
+
+  preloadImage(nextSrc).then(function () {
+    if (QUESTIONS[currentQuestionIndex].image === nextSrc) {
+      questionImage.style.opacity = "1";
+    }
+  });
+}
+
+function renderAnswerButtons(question) {
   answerList.innerHTML = "";
 
   question.answers.forEach(function (answer) {
@@ -295,6 +420,7 @@ function renderQuestion() {
     button.type = "button";
     button.className = "answer-button";
     button.textContent = answer.text;
+    button.disabled = false;
 
     button.addEventListener("click", function () {
       selectAnswer(answer.type, button);
@@ -305,26 +431,41 @@ function renderQuestion() {
 }
 
 function selectAnswer(type, selectedButton) {
+  if (isAnswerLocked) {
+    return;
+  }
+
+  isAnswerLocked = true;
+
   const allButtons = document.querySelectorAll(".answer-button");
 
   allButtons.forEach(function (button) {
-    button.disabled = true;
     button.classList.remove("selected");
+    button.blur();
   });
 
   selectedButton.classList.add("selected");
-
   selectedAnswers[currentQuestionIndex] = type;
+
+  allButtons.forEach(function (button) {
+    button.disabled = true;
+  });
 
   setTimeout(function () {
     if (currentQuestionIndex < QUESTIONS.length - 1) {
-      currentQuestionIndex += 1;
-      renderQuestion();
+      const nextQuestionIndex = currentQuestionIndex + 1;
+      const nextQuestion = QUESTIONS[nextQuestionIndex];
+
+      prepareImageWithLimit(nextQuestion.image, 450).then(function () {
+        currentQuestionIndex = nextQuestionIndex;
+        renderQuestion();
+      });
+
       return;
     }
 
     showLoading();
-  }, 220);
+  }, 130);
 }
 
 /* =========================
@@ -339,8 +480,14 @@ function showLoading() {
   loadingFill.style.width = "0%";
   loadingPercent.textContent = "0%";
 
+  const resultType = calculateResult();
+
+  if (TYPE_INFO[resultType]) {
+    preloadImage(TYPE_INFO[resultType].image);
+  }
+
   const loadingTimer = setInterval(function () {
-    percent += 4;
+    percent += 5;
 
     if (percent >= 100) {
       percent = 100;
@@ -349,18 +496,19 @@ function showLoading() {
       loadingFill.style.width = "100%";
       loadingPercent.textContent = "100%";
 
-      setTimeout(function () {
-        const resultType = calculateResult();
-        renderResult(resultType);
-        showScreen("result");
-      }, 300);
+      prepareImageWithLimit(TYPE_INFO[resultType].image, 500).then(function () {
+        setTimeout(function () {
+          renderResult(resultType);
+          showScreen("result");
+        }, 180);
+      });
 
       return;
     }
 
     loadingFill.style.width = `${percent}%`;
     loadingPercent.textContent = `${percent}%`;
-  }, 45);
+  }, 38);
 }
 
 /* =========================
@@ -603,6 +751,7 @@ function restartTest() {
   currentQuestionIndex = 0;
   selectedAnswers = [];
   currentResultType = null;
+  isAnswerLocked = false;
 
   shareMenu.classList.remove("open");
 
