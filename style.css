@@ -11,7 +11,7 @@
 :root {
   --bg: #fff8ec;
   --bg-deep: #f8ead4;
-  --card: rgba(255, 255, 255, 0.9);
+  --card: rgba(255, 255, 255, 0.92);
   --text: #3d3024;
   --text-soft: #7a6a59;
   --line: rgba(116, 92, 65, 0.18);
@@ -283,6 +283,10 @@ img {
 
 /* =========================
    질문 화면
+   구조:
+   질문 번호 + 질문
+   → 일러스트
+   → 선택지
 ========================= */
 
 .question-screen {
@@ -291,30 +295,29 @@ img {
 }
 
 .question-card {
-  padding: 13px 13px 15px;
-  border-radius: 26px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 13px 15px;
+  border-radius: 28px;
 }
 
+/* 진행률은 화면 맨 아래쪽에 얇게 배치 */
 .progress-area {
-  margin-bottom: 10px;
+  order: 4;
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 
 .progress-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-  color: var(--text-soft);
-  font-size: 12px;
-  font-weight: 800;
+  display: none;
 }
 
 .progress-bar {
   width: 100%;
-  height: 8px;
+  height: 6px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(127, 207, 189, 0.2);
+  background: rgba(127, 207, 189, 0.18);
 }
 
 .progress-fill {
@@ -325,16 +328,62 @@ img {
   transition: width 0.2s ease;
 }
 
+/* 질문 제목 영역을 맨 위로 */
+.question-text-wrap {
+  order: 1;
+  margin: 0 2px 12px;
+  text-align: center;
+}
+
+.question-number {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 50px;
+  height: 32px;
+  margin: 0 0 8px;
+  border-radius: 999px;
+  background: rgba(127, 207, 189, 0.22);
+  color: #2ca390;
+  font-family:
+    "Gaegu",
+    "Apple SD Gothic Neo",
+    "Malgun Gothic",
+    sans-serif;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.question-title {
+  margin: 0;
+  color: #332820;
+  font-family:
+    "Gaegu",
+    "Apple SD Gothic Neo",
+    "Malgun Gothic",
+    sans-serif;
+  font-size: clamp(27px, 7.2vw, 34px);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  font-weight: 700;
+  word-break: keep-all;
+  white-space: pre-line;
+}
+
+/* 일러스트를 질문 아래로 */
 .question-image-wrap {
+  order: 2;
   position: relative;
   overflow: hidden;
-  border-radius: 22px 24px 21px 25px;
+  margin-bottom: 13px;
+  border-radius: 24px 26px 23px 27px;
   background:
     radial-gradient(circle at 35% 28%, rgba(255, 230, 178, 0.45), transparent 30%),
     radial-gradient(circle at 72% 72%, rgba(199, 235, 223, 0.5), transparent 34%),
     #fff8eb;
   border: 2px solid rgba(103, 83, 62, 0.1);
-  min-height: 160px;
+  min-height: 206px;
 }
 
 .question-image-wrap::before {
@@ -357,48 +406,21 @@ img {
   background: #fff8eb;
 }
 
-.question-text-wrap {
-  margin: 12px 2px 10px;
-  text-align: center;
-}
-
-.question-number {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 42px;
-  height: 26px;
-  margin: 0 0 7px;
-  border-radius: 999px;
-  background: rgba(127, 207, 189, 0.2);
-  color: #2ca390;
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.question-title {
-  margin: 0;
-  color: #332820;
-  font-size: clamp(19px, 5.2vw, 25px);
-  line-height: 1.28;
-  letter-spacing: -0.055em;
-  word-break: keep-all;
-  white-space: pre-line;
-}
-
+/* 선택지 */
 .answer-list {
+  order: 3;
   display: grid;
-  gap: 7px;
+  gap: 9px;
 }
 
 /* 손그림 느낌 선택지 */
 .answer-button {
   position: relative;
   width: 100%;
-  min-height: 45px;
-  padding: 9px 13px 9px 15px;
-  border: 2px solid rgba(103, 83, 62, 0.22);
-  border-radius: 19px 17px 20px 16px;
+  min-height: 55px;
+  padding: 10px 15px 10px 17px;
+  border: 2px solid rgba(103, 83, 62, 0.24);
+  border-radius: 22px 19px 23px 18px;
   background:
     radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.75), transparent 32%),
     linear-gradient(180deg, #fffdf7 0%, #fff5e5 100%);
@@ -406,14 +428,13 @@ img {
   text-align: left;
   font-family:
     "Gaegu",
-    "Nanum Pen Script",
     "Apple SD Gothic Neo",
     "Malgun Gothic",
     sans-serif;
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.025em;
+  line-height: 1.13;
+  letter-spacing: -0.035em;
   word-break: keep-all;
   box-shadow:
     0 3px 0 rgba(126, 98, 68, 0.12),
@@ -428,26 +449,26 @@ img {
 .answer-button::before {
   content: "";
   position: absolute;
-  inset: 3px;
+  inset: 4px;
   border: 1px dashed rgba(103, 83, 62, 0.11);
-  border-radius: 16px 15px 18px 14px;
+  border-radius: 18px 16px 19px 15px;
   pointer-events: none;
 }
 
 .answer-button:nth-child(1) {
-  border-radius: 20px 17px 19px 18px;
+  border-radius: 23px 19px 22px 20px;
 }
 
 .answer-button:nth-child(2) {
-  border-radius: 17px 21px 18px 20px;
+  border-radius: 19px 24px 20px 23px;
 }
 
 .answer-button:nth-child(3) {
-  border-radius: 21px 18px 20px 17px;
+  border-radius: 24px 20px 23px 19px;
 }
 
 .answer-button:nth-child(4) {
-  border-radius: 18px 20px 17px 21px;
+  border-radius: 20px 23px 19px 24px;
 }
 
 .answer-button:active {
@@ -939,73 +960,66 @@ img {
 }
 
 /* =========================
-   아이폰 작은 화면 대응
+   아이폰 / 갤럭시 화면 대응
 ========================= */
 
 @media (max-width: 430px) {
   .screen {
-    padding: 10px 10px;
+    padding: 8px 9px;
   }
 
   .question-card {
-    padding: 11px 11px 13px;
-    border-radius: 24px;
-  }
-
-  .progress-area {
-    margin-bottom: 8px;
-  }
-
-  .progress-top {
-    font-size: 11.5px;
-    margin-bottom: 5px;
-  }
-
-  .progress-bar {
-    height: 7px;
-  }
-
-  .question-image-wrap {
-    min-height: 142px;
-    border-radius: 20px 22px 19px 23px;
-  }
-
-  .question-image {
-    aspect-ratio: 16 / 9;
+    padding: 13px 12px 13px;
+    border-radius: 26px;
   }
 
   .question-text-wrap {
-    margin: 9px 1px 8px;
+    margin-bottom: 11px;
   }
 
   .question-number {
-    min-width: 38px;
-    height: 23px;
-    margin-bottom: 5px;
-    font-size: 12px;
+    min-width: 48px;
+    height: 30px;
+    margin-bottom: 7px;
+    font-size: 19px;
   }
 
   .question-title {
-    font-size: clamp(17px, 5.1vw, 22px);
-    line-height: 1.22;
+    font-size: clamp(25px, 7vw, 31px);
+    line-height: 1.06;
+  }
+
+  .question-image-wrap {
+    min-height: 194px;
+    margin-bottom: 12px;
+    border-radius: 23px 25px 22px 26px;
+  }
+
+  .question-image {
+    aspect-ratio: 16 / 10;
   }
 
   .answer-list {
-    gap: 6px;
+    gap: 8px;
   }
 
   .answer-button {
-    min-height: 41px;
-    padding: 7px 11px 7px 13px;
-    font-size: 16px;
-    line-height: 1.18;
-    border-width: 1.8px;
+    min-height: 53px;
+    padding: 9px 14px 9px 16px;
+    font-size: 19.5px;
+    line-height: 1.1;
+    border-width: 2px;
+  }
+
+  .progress-area {
+    margin-top: 9px;
   }
 }
 
+/* 작은 아이폰 SE급 대응 */
 @media (max-width: 380px) {
   .screen {
-    padding: 8px 8px;
+    padding: 7px 7px;
   }
 
   .start-card,
@@ -1020,23 +1034,39 @@ img {
   }
 
   .question-card {
-    padding: 9px 9px 11px;
+    padding: 11px 10px 11px;
   }
 
-  .question-image-wrap {
-    min-height: 126px;
+  .question-number {
+    min-width: 44px;
+    height: 28px;
+    font-size: 18px;
+    margin-bottom: 6px;
   }
 
   .question-title {
-    font-size: 17px;
-    line-height: 1.18;
+    font-size: 24px;
+    line-height: 1.04;
+  }
+
+  .question-image-wrap {
+    min-height: 172px;
+    margin-bottom: 10px;
+  }
+
+  .answer-list {
+    gap: 7px;
   }
 
   .answer-button {
-    min-height: 38px;
-    padding: 6px 10px 6px 12px;
-    font-size: 15px;
-    line-height: 1.14;
+    min-height: 49px;
+    padding: 8px 12px 8px 14px;
+    font-size: 18.5px;
+    line-height: 1.07;
+  }
+
+  .progress-area {
+    margin-top: 8px;
   }
 
   .related-types {
@@ -1055,6 +1085,27 @@ img {
 
   .result-section {
     padding: 16px;
+  }
+}
+
+/* 아주 작은 화면 대응 */
+@media (max-width: 350px) {
+  .question-title {
+    font-size: 22px;
+  }
+
+  .question-image-wrap {
+    min-height: 155px;
+  }
+
+  .answer-button {
+    min-height: 45px;
+    font-size: 17.5px;
+    line-height: 1.05;
+  }
+
+  .answer-list {
+    gap: 6px;
   }
 }
 
