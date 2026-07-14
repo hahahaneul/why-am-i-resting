@@ -5,6 +5,7 @@
    - 결과 계산
    - Firebase 참여자수
    - 이미지 사전 로딩
+   - 원래 유형 돌아가기
    - 공유 기능
 ========================= */
 
@@ -41,7 +42,10 @@ const TEST_SHARE_URL = "https://hahahaneul.github.io/why-am-i-resting/";
 let userName = "";
 let currentQuestionIndex = 0;
 let selectedAnswers = [];
+
+let originalResultType = null;
 let currentResultType = null;
+
 let isAnswerLocked = false;
 
 const imageCache = {};
@@ -84,6 +88,8 @@ const similarTypeCard = document.getElementById("similar-type-card");
 const differentTypeCard = document.getElementById("different-type-card");
 const similarTypeName = document.getElementById("similar-type-name");
 const differentTypeName = document.getElementById("different-type-name");
+
+const originalTypeButton = document.getElementById("original-type-button");
 
 const resultOneLine = document.getElementById("result-one-line");
 const resultSummary = document.getElementById("result-summary");
@@ -145,6 +151,13 @@ function bindEvents() {
 
     if (type) {
       renderResult(type);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
+
+  originalTypeButton.addEventListener("click", function () {
+    if (originalResultType) {
+      renderResult(originalResultType);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   });
@@ -349,6 +362,7 @@ function handleStart() {
   userName = typedName;
   currentQuestionIndex = 0;
   selectedAnswers = [];
+  originalResultType = null;
   currentResultType = null;
   isAnswerLocked = false;
 
@@ -482,6 +496,9 @@ function showLoading() {
 
   const resultType = calculateResult();
 
+  originalResultType = resultType;
+  currentResultType = resultType;
+
   if (TYPE_INFO[resultType]) {
     preloadImage(TYPE_INFO[resultType].image);
   }
@@ -570,8 +587,9 @@ function renderResult(typeKey) {
   currentResultType = typeKey;
 
   applyResultTheme(typeInfo);
-  renderResultHeader(result, typeInfo);
+  renderResultHeader(result, typeInfo, typeKey);
   renderRelatedTypes(typeInfo);
+  renderOriginalTypeButton(typeKey);
   renderResultText(result);
   renderPolicies(typeKey);
 
@@ -586,9 +604,17 @@ function applyResultTheme(typeInfo) {
   resultCard.classList.add(typeInfo.className);
 }
 
-function renderResultHeader(result, typeInfo) {
-  resultKicker.textContent = `${userName}님의 결과가 나왔어요!`;
-  resultLabel.textContent = `${userName}님은`;
+function renderResultHeader(result, typeInfo, typeKey) {
+  const isOriginalType = typeKey === originalResultType;
+
+  if (isOriginalType) {
+    resultKicker.textContent = `${userName}님의 결과가 나왔어요!`;
+    resultLabel.textContent = `${userName}님은`;
+  } else {
+    resultKicker.textContent = "다른 유형을 보고 있어요";
+    resultLabel.textContent = "참고 유형은";
+  }
+
   resultTitle.textContent = `${result.title}입니다`;
   resultSubtitle.textContent = result.subtitle;
 
@@ -605,6 +631,19 @@ function renderRelatedTypes(typeInfo) {
 
   similarTypeCard.dataset.type = similarType.key;
   differentTypeCard.dataset.type = differentType.key;
+}
+
+function renderOriginalTypeButton(typeKey) {
+  if (!originalResultType || typeKey === originalResultType) {
+    originalTypeButton.classList.add("hidden");
+    originalTypeButton.textContent = "내 원래 유형으로 돌아가기";
+    return;
+  }
+
+  const originalTypeName = TYPE_INFO[originalResultType].name;
+
+  originalTypeButton.textContent = `내 원래 유형(${originalTypeName})으로 돌아가기`;
+  originalTypeButton.classList.remove("hidden");
 }
 
 function renderResultText(result) {
@@ -654,7 +693,7 @@ function renderPolicies(typeKey) {
 ========================= */
 
 function getShareText() {
-  const result = RESULTS[currentResultType];
+  const result = RESULTS[originalResultType || currentResultType];
 
   if (!result) {
     return "나는 왜 쉬고 있을까? 지금의 나를 알아보는 쉬었음 유형 테스트";
@@ -750,10 +789,12 @@ function showCopyComplete() {
 function restartTest() {
   currentQuestionIndex = 0;
   selectedAnswers = [];
+  originalResultType = null;
   currentResultType = null;
   isAnswerLocked = false;
 
   shareMenu.classList.remove("open");
+  originalTypeButton.classList.add("hidden");
 
   showScreen("start");
 }

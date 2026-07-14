@@ -1,8 +1,17 @@
 /* =========================
-   기본 설정
+   폰트 설정
 ========================= */
 
-@import url("https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap");
+@font-face {
+  font-family: "ParkDaHyun";
+  src: url("fonts/parkdahyun.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* =========================
+   기본 설정
+========================= */
 
 * {
   box-sizing: border-box;
@@ -59,6 +68,10 @@ button {
 img {
   display: block;
   max-width: 100%;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .app {
@@ -301,7 +314,6 @@ img {
   border-radius: 28px;
 }
 
-/* 진행률은 화면 맨 아래쪽에 얇게 배치 */
 .progress-area {
   order: 4;
   margin-top: 10px;
@@ -328,7 +340,6 @@ img {
   transition: width 0.2s ease;
 }
 
-/* 질문 제목 영역을 맨 위로 */
 .question-text-wrap {
   order: 1;
   margin: 0 2px 12px;
@@ -346,38 +357,37 @@ img {
   background: rgba(127, 207, 189, 0.22);
   color: #2ca390;
   font-family:
-    "Gaegu",
+    "ParkDaHyun",
     "Apple SD Gothic Neo",
     "Malgun Gothic",
     sans-serif;
-  font-size: 20px;
+  font-size: 21px;
   line-height: 1;
-  font-weight: 700;
+  font-weight: normal;
 }
 
 .question-title {
   margin: 0;
   color: #332820;
   font-family:
-    "Gaegu",
+    "ParkDaHyun",
     "Apple SD Gothic Neo",
     "Malgun Gothic",
     sans-serif;
-  font-size: clamp(27px, 7.2vw, 34px);
-  line-height: 1.08;
-  letter-spacing: -0.045em;
-  font-weight: 700;
+  font-size: clamp(28px, 7.2vw, 35px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  font-weight: normal;
   word-break: keep-all;
   white-space: pre-line;
 }
 
-/* 일러스트를 질문 아래로 */
 .question-image-wrap {
   order: 2;
   position: relative;
   overflow: hidden;
   margin-bottom: 13px;
-  border-radius: 24px 26px 23px 27px;
+  border-radius: 24px;
   background:
     radial-gradient(circle at 35% 28%, rgba(255, 230, 178, 0.45), transparent 30%),
     radial-gradient(circle at 72% 72%, rgba(199, 235, 223, 0.5), transparent 34%),
@@ -406,39 +416,32 @@ img {
   background: #fff8eb;
 }
 
-/* 선택지 */
 .answer-list {
   order: 3;
   display: grid;
-  gap: 9px;
+  gap: 10px;
 }
 
-/* 손그림 느낌 선택지 */
 .answer-button {
-  position: relative;
   width: 100%;
-  min-height: 55px;
-  padding: 10px 15px 10px 17px;
-  border: 2px solid rgba(103, 83, 62, 0.24);
-  border-radius: 22px 19px 23px 18px;
-  background:
-    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.75), transparent 32%),
-    linear-gradient(180deg, #fffdf7 0%, #fff5e5 100%);
+  min-height: 56px;
+  padding: 11px 18px;
+  border: 2px solid rgba(103, 83, 62, 0.16);
+  border-radius: 999px;
+  background: #fffdf8;
   color: #4a392d;
-  text-align: left;
+  text-align: center;
   font-family:
-    "Gaegu",
+    "ParkDaHyun",
     "Apple SD Gothic Neo",
     "Malgun Gothic",
     sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.13;
-  letter-spacing: -0.035em;
+  font-size: 21px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-weight: normal;
   word-break: keep-all;
-  box-shadow:
-    0 3px 0 rgba(126, 98, 68, 0.12),
-    0 8px 18px rgba(114, 82, 46, 0.06);
+  box-shadow: 0 6px 16px rgba(114, 82, 46, 0.06);
   transition:
     transform 0.12s ease,
     border-color 0.12s ease,
@@ -446,64 +449,26 @@ img {
     box-shadow 0.12s ease;
 }
 
-.answer-button::before {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  border: 1px dashed rgba(103, 83, 62, 0.11);
-  border-radius: 18px 16px 19px 15px;
-  pointer-events: none;
-}
-
-.answer-button:nth-child(1) {
-  border-radius: 23px 19px 22px 20px;
-}
-
-.answer-button:nth-child(2) {
-  border-radius: 19px 24px 20px 23px;
-}
-
-.answer-button:nth-child(3) {
-  border-radius: 24px 20px 23px 19px;
-}
-
-.answer-button:nth-child(4) {
-  border-radius: 20px 23px 19px 24px;
-}
-
 .answer-button:active {
-  transform: translateY(1px) scale(0.995);
-  box-shadow:
-    0 1px 0 rgba(126, 98, 68, 0.12),
-    0 4px 10px rgba(114, 82, 46, 0.05);
+  transform: translateY(1px);
 }
 
 .answer-button.selected {
   border-color: rgba(72, 180, 158, 0.68);
-  background:
-    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.7), transparent 30%),
-    linear-gradient(180deg, #effff9 0%, #dff7ee 100%);
+  background: #effff9;
   color: #2e6e63;
-  box-shadow:
-    0 3px 0 rgba(72, 180, 158, 0.16),
-    0 8px 18px rgba(64, 150, 133, 0.08);
+  box-shadow: 0 8px 18px rgba(64, 150, 133, 0.1);
 }
 
 .answer-button:disabled {
   cursor: default;
 }
 
-/* PC에서만 hover 적용. 모바일 초록색 잔상 방지 */
 @media (hover: hover) and (pointer: fine) {
   .answer-button:hover {
-    transform: translateY(-1px) rotate(-0.15deg);
-    border-color: rgba(72, 180, 158, 0.48);
-    background:
-      radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.7), transparent 30%),
-      linear-gradient(180deg, #f3fff9 0%, #e7fbf3 100%);
-    box-shadow:
-      0 4px 0 rgba(72, 180, 158, 0.12),
-      0 10px 22px rgba(64, 150, 133, 0.1);
+    transform: translateY(-1px);
+    border-color: rgba(72, 180, 158, 0.42);
+    background: #f5fffb;
   }
 }
 
@@ -717,7 +682,7 @@ img {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin: 8px 0 16px;
+  margin: 8px 0 12px;
 }
 
 .related-card {
@@ -754,6 +719,33 @@ img {
   font-size: 23px;
   line-height: 1.1;
   letter-spacing: -0.06em;
+}
+
+.original-type-button {
+  width: 100%;
+  min-height: 46px;
+  margin: 0 0 16px;
+  border: 1px solid var(--type-soft);
+  border-radius: 999px;
+  background: var(--type-light);
+  color: #4c3d32;
+  font-size: 15px;
+  font-weight: 850;
+  box-shadow: 0 7px 18px rgba(114, 82, 46, 0.07);
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    background 0.15s ease;
+}
+
+.original-type-button:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.original-type-button:active {
+  transform: translateY(1px);
+  opacity: 0.9;
 }
 
 .result-section {
@@ -960,7 +952,7 @@ img {
 }
 
 /* =========================
-   아이폰 / 갤럭시 화면 대응
+   모바일 대응
 ========================= */
 
 @media (max-width: 430px) {
@@ -981,18 +973,17 @@ img {
     min-width: 48px;
     height: 30px;
     margin-bottom: 7px;
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .question-title {
-    font-size: clamp(25px, 7vw, 31px);
-    line-height: 1.06;
+    font-size: clamp(26px, 7vw, 32px);
+    line-height: 1.1;
   }
 
   .question-image-wrap {
     min-height: 194px;
     margin-bottom: 12px;
-    border-radius: 23px 25px 22px 26px;
   }
 
   .question-image {
@@ -1000,15 +991,14 @@ img {
   }
 
   .answer-list {
-    gap: 8px;
+    gap: 9px;
   }
 
   .answer-button {
-    min-height: 53px;
-    padding: 9px 14px 9px 16px;
-    font-size: 19.5px;
-    line-height: 1.1;
-    border-width: 2px;
+    min-height: 54px;
+    padding: 10px 16px;
+    font-size: 20px;
+    line-height: 1.14;
   }
 
   .progress-area {
@@ -1016,7 +1006,6 @@ img {
   }
 }
 
-/* 작은 아이폰 SE급 대응 */
 @media (max-width: 380px) {
   .screen {
     padding: 7px 7px;
@@ -1040,13 +1029,13 @@ img {
   .question-number {
     min-width: 44px;
     height: 28px;
-    font-size: 18px;
+    font-size: 19px;
     margin-bottom: 6px;
   }
 
   .question-title {
     font-size: 24px;
-    line-height: 1.04;
+    line-height: 1.1;
   }
 
   .question-image-wrap {
@@ -1055,14 +1044,14 @@ img {
   }
 
   .answer-list {
-    gap: 7px;
+    gap: 8px;
   }
 
   .answer-button {
-    min-height: 49px;
-    padding: 8px 12px 8px 14px;
+    min-height: 50px;
+    padding: 9px 14px;
     font-size: 18.5px;
-    line-height: 1.07;
+    line-height: 1.13;
   }
 
   .progress-area {
@@ -1088,7 +1077,6 @@ img {
   }
 }
 
-/* 아주 작은 화면 대응 */
 @media (max-width: 350px) {
   .question-title {
     font-size: 22px;
@@ -1099,13 +1087,12 @@ img {
   }
 
   .answer-button {
-    min-height: 45px;
-    font-size: 17.5px;
-    line-height: 1.05;
+    min-height: 46px;
+    font-size: 17px;
   }
 
   .answer-list {
-    gap: 6px;
+    gap: 7px;
   }
 }
 
