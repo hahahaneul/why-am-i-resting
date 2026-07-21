@@ -6,32 +6,52 @@
 
   <title>나는 왜 쉬고 있을까?</title>
 
-  <meta name="description" content="나는 어떤 쉬었음 유형일까? 지금의 나를 알아보는 청년ON라운지 심리테스트" />
+  <meta
+    name="description"
+    content="쉬고 있는 나의 상태를 알아보고, 지금의 나에게 맞는 청년지원 프로그램을 확인해보세요."
+  />
 
-  <!-- 공유 미리보기 -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="나는 왜 쉬고 있을까?" />
-  <meta property="og:description" content="나는 어떤 쉬었음 유형일까? 지금의 나를 알아보세요." />
-  <meta property="og:image" content="https://hahahaneul.github.io/why-am-i-resting/images/og-image.png" />
-  <meta property="og:url" content="https://hahahaneul.github.io/why-am-i-resting/" />
+  <meta
+    property="og:description"
+    content="지금의 나는 어떤 쉬었음 유형일까? 나에게 맞는 청년지원 프로그램을 확인해보세요."
+  />
+  <meta
+    property="og:image"
+    content="https://hahahaneul.github.io/why-am-i-resting/images/og-image.png"
+  />
+  <meta
+    property="og:url"
+    content="https://hahahaneul.github.io/why-am-i-resting/"
+  />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="나는 왜 쉬고 있을까?" />
-  <meta name="twitter:description" content="나는 어떤 쉬었음 유형일까? 지금의 나를 알아보세요." />
-  <meta name="twitter:image" content="https://hahahaneul.github.io/why-am-i-resting/images/og-image.png" />
+  <meta
+    name="twitter:description"
+    content="지금의 나는 어떤 쉬었음 유형일까? 나에게 맞는 청년지원 프로그램을 확인해보세요."
+  />
+  <meta
+    name="twitter:image"
+    content="https://hahahaneul.github.io/why-am-i-resting/images/og-image.png"
+  />
 
-  <link rel="stylesheet" href="style.css?v=4" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 
 <body>
-  <main id="app" class="app">
-
+  <main class="app">
     <!-- 시작 화면 -->
     <section id="start-screen" class="screen start-screen active">
       <div class="start-card">
-        <div class="participant-badge">
-          참여자수: <span id="participant-count">00</span>명
-        </div>
+        <p class="start-kicker">쉬었음 청년 셀프 체크</p>
+
+        <h1 class="start-title">나는 왜 쉬고 있을까?</h1>
+
+        <p class="start-description">
+          나는 어떤 쉬었음 유형일까?
+        </p>
 
         <div class="start-image-wrap">
           <img
@@ -41,36 +61,21 @@
           />
         </div>
 
-        <div class="start-text">
-          <h1>나는 왜 쉬고 있을까?</h1>
-          <p>나는 어떤 쉬었음 유형일까?</p>
-        </div>
-
-        <div class="name-box">
-          <input
-            id="name-input"
-            type="text"
-            maxlength="12"
-            placeholder="이름을 입력하세요"
-            autocomplete="off"
-          />
-          <p id="name-error" class="name-error" aria-live="polite"></p>
+        <div class="participant-box">
+          <span class="participant-label">참여자수</span>
+          <strong id="participant-count">00</strong>
+          <span class="participant-unit">명</span>
         </div>
 
         <button id="start-button" class="primary-button" type="button">
           시작하기
         </button>
-
-        <p class="start-notice">
-          정답은 없습니다. 지금의 나와 가장 가까운 답을 골라주세요.
-        </p>
       </div>
     </section>
 
     <!-- 질문 화면 -->
     <section id="question-screen" class="screen question-screen">
       <div class="question-card">
-
         <div class="progress-area">
           <div class="progress-top">
             <span id="progress-text">1 / 8</span>
@@ -82,18 +87,20 @@
           </div>
         </div>
 
+        <div class="question-text-wrap">
+          <p id="question-number" class="question-number">Q1</p>
+          <h2 id="question-title" class="question-title">
+            쉬고 싶은데 쉬기 싫다.
+          </h2>
+        </div>
+
         <div class="question-image-wrap">
           <img
             id="question-image"
             src="images/q1.png"
-            alt=""
+            alt="질문 이미지"
             class="question-image"
           />
-        </div>
-
-        <div class="question-text-wrap">
-          <p id="question-number" class="question-number">Q1</p>
-          <h2 id="question-title" class="question-title"></h2>
         </div>
 
         <div id="answer-list" class="answer-list"></div>
@@ -104,131 +111,154 @@
     <section id="loading-screen" class="screen loading-screen">
       <div class="loading-card">
         <div class="loading-clovers" aria-hidden="true">
-          <span>☘️</span>
-          <span>☘️</span>
-          <span>☘️</span>
+          <span>☘</span>
+          <span>☘</span>
+          <span>☘</span>
         </div>
 
-        <h2>결과를 살펴보고 있어요</h2>
-        <p>지금의 나와 가장 가까운 유형을 찾는 중...</p>
+        <p class="loading-title">당신의 쉬었음 유형을 찾고 있어요</p>
 
         <div class="loading-bar">
           <div id="loading-fill" class="loading-fill"></div>
         </div>
 
-        <p id="loading-percent" class="loading-percent">0%</p>
+        <p class="loading-percent-text">
+          <span id="loading-percent">0%</span>
+        </p>
       </div>
     </section>
 
     <!-- 결과 화면 -->
     <section id="result-screen" class="screen result-screen">
-      <div class="result-card">
+      <article class="result-card">
+        <p class="result-kicker">결과가 나왔어요!</p>
+        <p class="result-label">당신의 유형은</p>
 
-        <div class="result-header">
-          <p class="result-kicker">결과가 나왔어요!</p>
-          <p class="result-label">당신의 유형은</p>
-          <h2 id="result-title" class="result-title"></h2>
-          <p id="result-subtitle" class="result-subtitle"></p>
-        </div>
+        <h2 id="result-title" class="result-title">씨앗형입니다</h2>
+
+        <p id="result-subtitle" class="result-subtitle">
+          겉으로는 쉬는 중, 속으로는 조용히 자라는 중
+        </p>
 
         <div class="result-image-wrap">
           <img
             id="result-image"
-            src=""
-            alt=""
+            src="images/result-seed.png"
+            alt="결과 이미지"
             class="result-image"
           />
         </div>
 
-        <div class="related-types">
-          <button id="similar-type-card" class="related-card" type="button">
-            <span class="related-card-label">☘️ 비슷한 유형</span>
-            <strong id="similar-type-name"></strong>
-          </button>
-
-          <button id="different-type-card" class="related-card" type="button">
-            <span class="related-card-label">☘️ 다른 유형</span>
-            <strong id="different-type-name"></strong>
-          </button>
-        </div>
-
-        <button id="original-type-button" class="original-type-button hidden" type="button">
-          내 원래 유형으로 돌아가기
-        </button>
-
-        <section class="result-section diagnosis-section">
-          <div class="section-title-row">
-            <span class="section-icon">💡</span>
-            <h3>한 줄 진단</h3>
-          </div>
+        <section class="result-section one-line-section">
+          <h3>한 줄 진단</h3>
           <p id="result-one-line" class="result-one-line"></p>
         </section>
 
-        <section class="result-section summary-section">
-          <h3>나는 이런 사람에 가까워요</h3>
-          <p id="result-summary"></p>
+        <section class="result-section">
+          <h3>지금의 나는</h3>
+          <p id="result-summary" class="result-summary"></p>
         </section>
 
-        <section class="result-section traits-section">
+        <section class="result-section">
           <h3>이런 모습이 있을 수 있어요</h3>
-          <ul id="result-traits"></ul>
+          <ul id="result-traits" class="result-list"></ul>
         </section>
 
-        <section class="result-section strength-section">
-          <h3>당신의 강점</h3>
-          <ul id="result-strengths"></ul>
+        <section class="result-section">
+          <h3>당신의 힘</h3>
+          <ul id="result-strengths" class="result-list"></ul>
         </section>
 
-        <section class="result-section youth-section">
-          <h3>지금의 내게 필요한 것들</h3>
-          <p class="youth-intro">서울고용센터는 당신을 돕고 싶어요.</p>
+        <section class="result-section policy-section">
+          <h3>지금의 내게 필요한 것들만 골랐어요</h3>
+          <p class="policy-description">
+            서울고용센터와 고용노동부 청년고용정책 중에서
+            지금의 유형에 맞는 프로그램을 추천해요.
+          </p>
+
           <div id="policy-list" class="policy-list"></div>
-        </section>
 
-        <div class="result-actions">
           <a
             id="youth-link"
-            class="primary-button link-button"
+            class="policy-link"
             href="https://seoulgoyoung.github.io/youth-lounge/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            청년ON라운지 바로가기
+            신청·상담 페이지 보러가기
           </a>
+        </section>
+
+        <section class="related-types">
+          <button
+            id="similar-type-card"
+            class="related-card similar-card"
+            type="button"
+          >
+            <span>비슷한 유형</span>
+            <strong id="similar-type-name">숨고르기형</strong>
+          </button>
+
+          <button
+            id="different-type-card"
+            class="related-card different-card"
+            type="button"
+          >
+            <span>다른 유형</span>
+            <strong id="different-type-name">도약형</strong>
+          </button>
+        </section>
+
+        <button
+          id="original-type-button"
+          class="original-type-button hidden"
+          type="button"
+        >
+          내 원래 유형으로 돌아가기
+        </button>
+
+        <section class="share-section">
+          <p class="share-text">
+            같이 쉬고 있는 친구에게 공유해보세요.
+          </p>
 
           <div class="share-area">
-            <button id="share-toggle-button" class="secondary-button" type="button">
-              공유하기 ▼
+            <button id="share-toggle-button" class="share-main-button" type="button">
+              공유하기
             </button>
 
             <div id="share-menu" class="share-menu">
-              <button id="native-share-button" type="button">휴대폰 공유</button>
-              <button id="x-share-button" type="button">X에 공유</button>
-              <button id="copy-link-button" type="button">링크 복사</button>
+              <button id="native-share-button" type="button">
+                휴대폰으로 공유
+              </button>
+              <button id="x-share-button" type="button">
+                X에 공유
+              </button>
+              <button id="copy-link-button" type="button">
+                링크 복사
+              </button>
             </div>
           </div>
+        </section>
 
-          <button id="restart-button" class="secondary-button" type="button">
-            다시 하기
-          </button>
-        </div>
-
-      </div>
+        <button id="restart-button" class="restart-button" type="button">
+          다시 해보기
+        </button>
+      </article>
     </section>
-
   </main>
 
-  <!-- Firebase 참여자수용 -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 
-  <!-- 데이터 파일 -->
-  <script src="character.js?v=4"></script>
-  <script src="questions.js?v=4"></script>
-  <script src="results.js?v=4"></script>
-  <script src="policy.js?v=4"></script>
+  <!-- Data -->
+  <script src="character.js?v=5"></script>
+  <script src="questions.js?v=5"></script>
+  <script src="results.js?v=5"></script>
+  <script src="policy.js?v=5"></script>
 
-  <!-- 메인 동작 -->
-  <script src="script.js?v=4"></script>
+  <!-- Main -->
+  <script src="script.js?v=5"></script>
 </body>
 </html>

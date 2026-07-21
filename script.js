@@ -39,7 +39,6 @@ try {
 
 const TEST_SHARE_URL = "https://hahahaneul.github.io/why-am-i-resting/";
 
-let userName = "";
 let currentQuestionIndex = 0;
 let selectedAnswers = [];
 
@@ -60,9 +59,6 @@ const loadingScreen = document.getElementById("loading-screen");
 const resultScreen = document.getElementById("result-screen");
 
 const participantCountEl = document.getElementById("participant-count");
-
-const nameInput = document.getElementById("name-input");
-const nameError = document.getElementById("name-error");
 const startButton = document.getElementById("start-button");
 
 const progressText = document.getElementById("progress-text");
@@ -126,17 +122,6 @@ function init() {
 function bindEvents() {
   startButton.addEventListener("click", handleStart);
 
-  nameInput.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      handleStart();
-    }
-  });
-
-  nameInput.addEventListener("input", function () {
-    nameError.textContent = "";
-    nameInput.classList.remove("shake");
-  });
-
   similarTypeCard.addEventListener("click", function () {
     const type = similarTypeCard.dataset.type;
 
@@ -155,12 +140,14 @@ function bindEvents() {
     }
   });
 
-  originalTypeButton.addEventListener("click", function () {
-    if (originalResultType) {
-      renderResult(originalResultType);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  });
+  if (originalTypeButton) {
+    originalTypeButton.addEventListener("click", function () {
+      if (originalResultType) {
+        renderResult(originalResultType);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+  }
 
   shareToggleButton.addEventListener("click", function () {
     shareMenu.classList.toggle("open");
@@ -346,20 +333,6 @@ function showScreen(screenName) {
 ========================= */
 
 function handleStart() {
-  const typedName = nameInput.value.trim();
-
-  if (!typedName) {
-    nameError.textContent = "이름을 입력한 뒤 시작해주세요.";
-    nameInput.classList.remove("shake");
-
-    void nameInput.offsetWidth;
-
-    nameInput.classList.add("shake");
-    nameInput.focus();
-    return;
-  }
-
-  userName = typedName;
   currentQuestionIndex = 0;
   selectedAnswers = [];
   originalResultType = null;
@@ -559,7 +532,7 @@ function calculateResult() {
 }
 
 function resolveTie(tiedTypes) {
-  const priorityQuestionIndexes = [4, 6, 7, 2, 5, 3, 1, 0];
+  const priorityQuestionIndexes = [7, 4, 6, 5, 3, 2, 1, 0];
 
   for (const questionIndex of priorityQuestionIndexes) {
     const selectedType = selectedAnswers[questionIndex];
@@ -593,7 +566,9 @@ function renderResult(typeKey) {
   renderResultText(result);
   renderPolicies(typeKey);
 
-  youthLink.href = YOUTH_LOUNGE_URL;
+  if (youthLink) {
+    youthLink.href = YOUTH_LOUNGE_URL;
+  }
 }
 
 function applyResultTheme(typeInfo) {
@@ -608,8 +583,8 @@ function renderResultHeader(result, typeInfo, typeKey) {
   const isOriginalType = typeKey === originalResultType;
 
   if (isOriginalType) {
-    resultKicker.textContent = `${userName}님의 결과가 나왔어요!`;
-    resultLabel.textContent = `${userName}님은`;
+    resultKicker.textContent = "결과가 나왔어요!";
+    resultLabel.textContent = "당신의 유형은";
   } else {
     resultKicker.textContent = "다른 유형을 보고 있어요";
     resultLabel.textContent = "참고 유형은";
@@ -634,6 +609,10 @@ function renderRelatedTypes(typeInfo) {
 }
 
 function renderOriginalTypeButton(typeKey) {
+  if (!originalTypeButton) {
+    return;
+  }
+
   if (!originalResultType || typeKey === originalResultType) {
     originalTypeButton.classList.add("hidden");
     originalTypeButton.textContent = "내 원래 유형으로 돌아가기";
@@ -699,7 +678,7 @@ function getShareText() {
     return "나는 왜 쉬고 있을까? 지금의 나를 알아보는 쉬었음 유형 테스트";
   }
 
-  return `${userName}님의 쉬었음 유형은 ${result.title}!`;
+  return `나의 쉬었음 유형은 ${result.title}!`;
 }
 
 function shareNative() {
@@ -794,7 +773,10 @@ function restartTest() {
   isAnswerLocked = false;
 
   shareMenu.classList.remove("open");
-  originalTypeButton.classList.add("hidden");
+
+  if (originalTypeButton) {
+    originalTypeButton.classList.add("hidden");
+  }
 
   showScreen("start");
 }
