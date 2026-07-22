@@ -1,18 +1,3 @@
-/* =========================
-   질문 데이터
-   - type 값이 결과 유형 점수로 반영됨
-
-   유형 키
-   seed     = 씨앗형
-   pause    = 숨고르기형
-   path     = 길찾기형
-   step     = 한걸음형
-   jump     = 도약형
-   together = 함께형
-   spark    = 재점화형
-   explore  = 탐험형
-========================= */
-
 const QUESTIONS = [
   {
     number: 1,

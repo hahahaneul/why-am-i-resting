@@ -1,10 +1,3 @@
-/* =========================
-   유형 기본 정보
-   - 결과 이미지 경로
-   - 유형명
-   - 비슷한 유형 / 다른 유형
-========================= */
-
 const TYPE_ORDER = [
   "seed",
   "pause",
@@ -22,7 +15,7 @@ const TYPE_INFO = {
     name: "씨앗형",
     image: "images/result-seed.png",
     className: "type-seed",
-    similar: "step",
+    similar: "path",
     different: "jump"
   },
 
@@ -31,7 +24,7 @@ const TYPE_INFO = {
     name: "숨고르기형",
     image: "images/result-pause.png",
     className: "type-pause",
-    similar: "together",
+    similar: "spark",
     different: "jump"
   },
 
@@ -50,7 +43,7 @@ const TYPE_INFO = {
     image: "images/result-step.png",
     className: "type-step",
     similar: "seed",
-    different: "explore"
+    different: "pause"
   },
 
   jump: {
@@ -58,7 +51,7 @@ const TYPE_INFO = {
     name: "도약형",
     image: "images/result-jump.png",
     className: "type-jump",
-    similar: "spark",
+    similar: "step",
     different: "pause"
   },
 
@@ -68,7 +61,7 @@ const TYPE_INFO = {
     image: "images/result-together.png",
     className: "type-together",
     similar: "pause",
-    different: "path"
+    different: "jump"
   },
 
   spark: {
@@ -76,8 +69,8 @@ const TYPE_INFO = {
     name: "재점화형",
     image: "images/result-spark.png",
     className: "type-spark",
-    similar: "jump",
-    different: "pause"
+    similar: "pause",
+    different: "explore"
   },
 
   explore: {
@@ -86,6 +79,6 @@ const TYPE_INFO = {
     image: "images/result-explore.png",
     className: "type-explore",
     similar: "path",
-    different: "step"
+    different: "seed"
   }
 };
